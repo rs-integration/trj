@@ -22,10 +22,12 @@ var (
 	heartbeatTime    time.Time
 	currentIteration = 0
 	heartbeatMessage = "I`m alive..."
+	forceStop        = false
 )
 
 type TRJobInterface interface {
 	Execute()
+	JobName() string
 }
 
 func init() {
@@ -34,12 +36,14 @@ func init() {
 	refreshHeartbeatTime()
 }
 
-func Run(job TRJobInterface) {
+func Run(job TRJobInterface) TRJobInterface {
 	for beat() {
 		job.Execute()
 	}
 
 	fmt.Println(FINISH)
+
+	return job
 }
 
 func beat() bool {
@@ -54,10 +58,11 @@ func iterate() {
 }
 
 func canRun() bool {
-	canRun := haveIterations() && haveTime(endTime)
+	canRun := haveIterations() && haveTime(endTime) && !needForceStop()
 
 	if !canRun {
 		message := "Stopped because of: "
+
 		if !haveIterations() {
 			message += "noIterations "
 		}
@@ -66,10 +71,18 @@ func canRun() bool {
 			message += "noTime"
 		}
 
+		if needForceStop() {
+			message += "forceStop"
+		}
+
 		fmt.Println(message)
 	}
 
 	return canRun
+}
+
+func needForceStop() bool {
+	return forceStop
 }
 
 func haveIterations() bool {
