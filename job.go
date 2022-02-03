@@ -12,7 +12,7 @@ const (
 	TIMEOUT        = 10
 	REFRESH_EVERY  = 300
 	REFRESH_PERIOD = 1
-	MAX_ITERATIONS = 34
+	MAX_ITERATIONS = 3400
 )
 
 var (
@@ -24,35 +24,47 @@ var (
 )
 
 func init() {
-	refreshHeartbeat()
-
 	fmt.Println(START)
-	defer fmt.Println(FINISH)
+
+	refreshHeartbeat()
 }
 
 func Run() {
 	for beat() {
-		
+
 	}
+
+	fmt.Println(FINISH)
 }
 
 func beat() bool {
 	printUnprocessed()
 	iterate()
 
-	return checkLifecycles()
+	return canRun()
 }
 
 func iterate() {
 	currentIteration++
 }
 
-func checkLifecycles() bool {
-	return haveIterations() && canRun()
-}
-
 func canRun() bool {
-	return haveTime(endTime)
+	canRun := haveIterations() && haveTime(endTime)
+
+	if !canRun {
+		message := "Stopped because of: "
+		if !haveIterations() {
+			message += "noIterations "
+		}
+
+		if !haveTime(endTime) {
+			message += "noTime"
+		}
+
+		fmt.Println(message)
+	}
+
+	return canRun
 }
 
 func haveIterations() bool {
