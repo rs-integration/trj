@@ -6,6 +6,6 @@ const (
 	JOB_HEADER string = "L'oreal check invoice circulation status"
 )
 
-func run() {
-	fmt.Print(JOB_HEADER)
+func Run() {
+	fmt.Println(JOB_HEADER)
 }
