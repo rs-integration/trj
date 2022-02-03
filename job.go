@@ -26,7 +26,7 @@ var (
 func init() {
 	fmt.Println(START)
 
-	refreshHeartbeat()
+	refreshHeartbeatTime()
 }
 
 func Run() {
@@ -87,15 +87,24 @@ func heartbeat() {
 		return
 	}
 
-	refreshHeartbeat()
+	if !haveTime(heartbeatTime) {
+		refreshHeartbeatTime()
+		sendHeartbeat("BY TIME")
+	}
 
-	fmt.Println(heartbeatMessage)
+	if !haveIterations() {
+		sendHeartbeat("BY ITERATIONS")
+	}
+}
+
+func sendHeartbeat(postfix string) {
+	fmt.Println(heartbeatMessage + " Heartbeated " + postfix)
 }
 
 func noHeartbeatIteration() bool {
 	return currentIteration%REFRESH_EVERY != 0
 }
 
-func refreshHeartbeat() {
+func refreshHeartbeatTime() {
 	heartbeatTime = time.Now().Add(REFRESH_PERIOD * time.Second)
 }
