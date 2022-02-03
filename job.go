@@ -2,6 +2,7 @@ package trj
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -80,7 +81,7 @@ func printUnprocessed() {
 	heartbeat()
 }
 
-func processExternal() {}
+func processExternal() { fmt.Println("wow itr " + strconv.Itoa(currentIteration)) }
 
 func heartbeat() {
 	if haveTime(heartbeatTime) && noHeartbeatIteration() {
