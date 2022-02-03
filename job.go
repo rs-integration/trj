@@ -13,7 +13,7 @@ const (
 	TIMEOUT        = 10
 	REFRESH_EVERY  = 300
 	REFRESH_PERIOD = 1
-	MAX_ITERATIONS = 3400
+	MAX_ITERATIONS = 34000
 )
 
 var (
@@ -24,15 +24,19 @@ var (
 	heartbeatMessage = "I`m alive..."
 )
 
+type TRJobInterface interface {
+	Execute()
+}
+
 func init() {
 	fmt.Println(START)
 
 	refreshHeartbeatTime()
 }
 
-func Run() {
+func Run(job TRJobInterface) {
 	for beat() {
-
+		job.Execute()
 	}
 
 	fmt.Println(FINISH)
