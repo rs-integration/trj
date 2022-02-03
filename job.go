@@ -1,4 +1,4 @@
-package lreChekInvoiceCirculationStatusInKorusJob
+package trj
 
 import "fmt"
 
